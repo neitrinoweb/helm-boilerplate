@@ -1,0 +1,9 @@
+{{- if .Values.list }}
+apiVersion: v1
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""
+items:
+  {{- toYaml .Values.list | replace "RELEASE_NAMESPACE" .Release.Namespace | replace "RELEASE_NAME" .Release.Name | nindent 2 }}
+{{- end }}

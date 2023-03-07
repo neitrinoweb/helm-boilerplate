@@ -1,0 +1,257 @@
+nameOverride: ""
+fullnameOverride: ""
+
+
+payload:
+  enabled: false
+
+  kind: Pod
+  # kind: ReplicaSet
+  # kind: Deployment
+  # kind: StatefulSet
+  # kind: DaemonSet
+  # kind: Job
+  # kind: CronJob
+
+  # apiVersion: v1 # manualy set apiVersion field
+
+  automountServiceAccountToken: false
+
+  replicas: 1
+
+  # hostname: $(NODE_NAME)
+
+  image:
+    repository: nginx
+    pullPolicy: IfNotPresent
+    tag: ""
+    pullSecrets: []
+    credentials: {}
+      # registry: ""
+      # username: ""
+      # password: ""
+
+  securityContext: {}
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+    # runAsUser: 1000
+
+  pod:
+    annotations: {}
+    securityContext: {}
+      # fsGroup: 2000
+
+  container: {}
+    # stdin: true
+    # tty: true
+
+  autoscaling: # only for deployment
+    enabled: false
+    minReplicas: 1
+    maxReplicas: 10
+    targetCPUUtilizationPercentage: 80
+    # targetMemoryUtilizationPercentage: 80
+
+  resources: {}
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+    #   memory: 128Mi
+
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+  cronjob:
+    schedule: "*/3 * * * *"
+    concurrencyPolicy: Allow
+  job:
+    restartPolicy: OnFailure
+    backoffLimit: 1
+    parallelism: 1
+
+  deployment: {}
+    # strategy:
+    #   type: RollingUpdate
+    #   rollingUpdate:
+    #     maxUnavailable: 1
+    #     maxSurge: 1
+
+  statefulset: {}
+    # podManagementPolicy: Parallel
+    # updateStrategy:
+    #   type: RollingUpdate
+    #   rollingUpdate:
+    #     partition: 0
+
+  terminationGracePeriodSeconds: 30
+
+  command: []
+  # command:
+  #   - /bin/sleep
+  #   - infinity
+
+  # workingDir: /
+
+  # lifecycle:
+  #   postStart:
+  #   preStop:
+  #     httpGet:
+  #       path: /index.html
+  #       port: 80
+  #       host: localhost
+  #       scheme: HTTP
+  #     exec:
+  #       command: ["/bin/sleep", "10"]
+
+  env: {}
+  # env:
+  #   TZ: UTC
+  #   SOME: RELEASE_NAME-some
+
+  envSecrets: {}
+  # envSecrets:
+  #   secret-name:
+  #     - key
+  #     - name
+
+  envRaw: {}
+  # envRaw:
+  # - name: MEMORY_LIMIT_MB
+  #   valueFrom:
+  #     resourceFieldRef:
+  #       resource: limits.memory
+  #       divisor: 1Mi
+
+  init:
+    enabled: false
+    containers: []
+      # - name: init-container
+      #   image: "busybox"
+      #   command:
+      #     - /bin/chmod
+      #     - -R
+      #     - "0777"
+      #     - /data/
+      # - name: migrate
+      #   command:
+      #     - /go/bin/migrate
+
+  additionalContainers: []
+    # - name: RELEASE_NAME-nginx
+    #   image: nginx
+    #   volumeMounts:
+    #     - name: config
+    #       mountPath: /etc/nginx/nginx.conf
+    #       subPath: nginx-conf
+    #       readOnly: true
+
+  volumeMounts: []
+    # - name: www
+    #   mountPath: /usr/share/nginx/html
+    # - name: tmp
+    #   mountPath: /tmp
+
+  volumes: []
+    # - name: tmp
+    #   emptyDir:
+    #     medium: Memory
+
+  volumeClaimTemplates: []
+    # - metadata:
+    #     name: www
+    #   spec:
+    #     accessModes:
+    #       - ReadWriteOnce
+    #     storageClassName: local-path
+    #     resources:
+    #       requests:
+    #         storage: 1Gi
+
+  probe:
+    liveness: {}
+    readiness: {}
+      # httpGet:
+      #   path: /
+      #   port: 8080
+      # initialDelaySeconds: 10
+      # failureThreshold: 10
+      # timeoutSeconds: 10
+      # periodSeconds: 10
+
+  # Default ClusterFirst ClusterFirstWithHostNet None
+  dnsPolicy: ClusterFirst
+  hostNetwork: false
+  hostAliases: []
+
+  service:
+    type: ClusterIP
+    # clusterIP: None
+    # annotations: {}
+    # publishNotReadyAddresses: true
+
+ports: []
+  # - name: http
+  #   containerPort: 8080
+  #   servicePort: 8080
+  #   protocol: TCP
+
+ingress:
+  enabled: false
+  port: 8080
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: sub.domain.zone
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: sub.domain.zone
+  #    hosts:
+  #      - sub.domain.zone
+
+
+configuration: []
+  # - name: settings_json
+  #   type: json
+  #   mount: /app/configuration.json
+  #   payload:
+  #     key: value
+  #     note: "will be rendered as json and placed as file"
+  # - name: settings_yaml
+  #   type: yaml
+  #   mount: /app/configuration.yaml
+  #   payload:
+  #     key: "value"
+  #     note: "will be rendered or yaml and placed as file"
+  # - name: settings_raw
+  #   type: raw
+  #   mount: /app/configuration.file
+  #   payload: |
+  #     some
+  #       will be placed as file
+
+list: []
+
+
+# <DO NOT TOUCH>
+groups:
+  first:
+    - Pod
+  second:
+    - Job
+    - CronJob
+  third:
+    - ReplicaSet
+    - Deployment
+    - StatefulSet
+    - DaemonSet
+# </DO NOT TOUCH>

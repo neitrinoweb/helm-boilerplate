@@ -1,0 +1,3 @@
+{{- if .Values.payload.enabled -}}
+{{- include "payload" . }}
+{{- end -}}

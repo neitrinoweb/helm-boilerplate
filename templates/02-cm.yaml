@@ -1,0 +1,18 @@
+{{- if .Values.configuration }}
+---
+apiVersion: v1
+kind: ConfigMap
+{{ include "payload.object.metadata" . }}
+data:
+  {{- $fullname := include "boilerplate.fullname" . }}
+  {{- range $el := .Values.configuration }}
+  {{ $el.name }}: |
+    {{- if eq $el.type "json" }}
+      {{- toJson $el.payload | replace "RELEASE_NAME" $fullname | nindent 6 }}
+      {{- else if eq $el.type "yaml" }}
+      {{- toYaml $el.payload | replace "RELEASE_NAME" $fullname | nindent 6 }}
+      {{- else if eq $el.type "raw" }}
+      {{- printf "%s" $el.payload | replace "RELEASE_NAME" $fullname | nindent 6 }}
+    {{- end }}
+  {{- end }}
+{{- end }}
